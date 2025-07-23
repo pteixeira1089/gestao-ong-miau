@@ -19,4 +19,10 @@ public class Role {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, unique = true, length = 50)
     private RoleEnum role;
+
+    public static Role of(RoleEnum role) {
+        return Role.builder()
+                .role(role)
+                .build();
+    }
 }

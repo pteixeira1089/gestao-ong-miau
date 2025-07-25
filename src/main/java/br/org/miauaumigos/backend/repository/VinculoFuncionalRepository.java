@@ -10,4 +10,8 @@ public interface VinculoFuncionalRepository extends JpaRepository<VinculoFuncion
 
     List<VinculoFuncional> findByColaboradorUsername(String username);
 
+    List<VinculoFuncional> findByColaboradorEmail(String email);
+
+    List<VinculoFuncional> findByColaboradorNome(String nome);
+
 }

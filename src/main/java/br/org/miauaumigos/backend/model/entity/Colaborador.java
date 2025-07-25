@@ -1,5 +1,6 @@
 package br.org.miauaumigos.backend.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -42,6 +43,10 @@ public class Colaborador {
             inverseJoinColumns = @JoinColumn(name = "role_id")
     )
     private Set<Role> roles = new HashSet<>();
+
+    @OneToMany(mappedBy = "colaborador", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference // Evita loop infinito no JSON
+    private Set<VinculoFuncional> vinculosFuncionais = new HashSet<>();
 
 
 }

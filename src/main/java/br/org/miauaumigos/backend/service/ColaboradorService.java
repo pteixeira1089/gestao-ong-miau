@@ -11,4 +11,5 @@ public class ColaboradorService {
 
     private final ColaboradorRepository colaboradorRepository;
     private final PasswordEncoder passwordEncoder;
+
 }

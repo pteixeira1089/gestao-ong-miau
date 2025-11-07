@@ -1,0 +1,44 @@
+version: '3.8'
+
+services:
+  # Serviço do Banco de Dados Postgres
+  postgres-db:
+    image: postgres:15 # Use a versão que preferir
+    container_name: miauaumigos-postgres-db
+    environment:
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "admin"
+      POSTGRES_DB: miauaumigos
+    volumes:
+      # Isso é VITAL: persiste os dados do seu banco fora do contêiner
+      - postgres-data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    networks:
+      - pg-network # Conecta na rede compartilhada
+
+  # Serviço do PgAdmin
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: miauaumigos-pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@exemplo.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    ports:
+      # Expõe o PgAdmin na porta 5050 da sua máquina (host)
+      - "5050:80"
+    depends_on:
+      # Garante que o pgadmin só suba depois que o banco estiver pronto
+      - postgres-db
+    networks:
+      - pg-network # Conecta na mesma rede
+
+# Declaração da rede
+networks:
+  pg-network:
+    driver: bridge
+
+# Declaração do volume (para persistência)
+volumes:
+  postgres-data:
+    driver: local

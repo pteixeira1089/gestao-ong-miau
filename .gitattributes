@@ -1,2 +1,15 @@
+# 1. Regra Padrão (A mais importante)
+# Detecta automaticamente arquivos de texto e garante que TODOS
+# sejam salvos no repositório com quebras de linha Linux (LF).
+# Isso resolve a briga entre Windows (CRLF) e Linux (LF).
+* text=auto eol=lf
+
+# 2. Regras Específicas (As que você já tinha)
+# Elas sobrescrevem a regra padrão para casos específicos.
+
+# Garante que o script mvnw seja LF (redundante com a regra *, mas não há problema)
 /mvnw text eol=lf
+
+# Garante que scripts de batch do Windows mantenham o CRLF para que
+# possam ser executados corretamente no Windows.
 *.cmd text eol=crlf

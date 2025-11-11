@@ -1,1 +1,7 @@
-CREATE TYPE especie_animal AS ENUM ('GATO', 'CACHORRO', 'OUTRO')
+CREATE TYPE tipo_evento_animal AS ENUM (
+    'ACOLHIMENTO',
+    'INTERNAÇÃO',
+    'ALTA',
+    'ADOÇÃO',
+    'FALECIMENTO',
+    'OUTRO')

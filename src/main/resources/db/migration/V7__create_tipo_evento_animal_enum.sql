@@ -3,5 +3,6 @@ CREATE TYPE tipo_evento_animal AS ENUM (
     'INTERNAÇÃO',
     'ALTA',
     'ADOÇÃO',
+    'DEVOLUÇÃO'
     'FALECIMENTO',
     'OUTRO')

@@ -28,12 +28,16 @@ public class Colaborador {
     @Column(nullable = false, length = 255)
     private String nome;
 
+    @Column(nullable = false, length = 255)
     private String email;
 
+    @Column(length = 100)
     private String telefone;
 
     @Column(name= "url_foto")
     private String urlFoto;
+
+    @Column(length = 2000)
     private String bio;
 
     @ManyToMany(fetch = FetchType.EAGER)

@@ -17,6 +17,8 @@ public interface ColaboradorRepository extends JpaRepository<Colaborador, Long> 
     List<Colaborador> findByEmailContainsIgnoreCase(String email);
     List<Colaborador> findByNomeContainsIgnoreCase(String nome);
 
+    Optional<Colaborador> findByUsername(String username);
+
     // Verifica se username ou email já existem (para evitar duplicatas)
     boolean existsByUsername(String username);
     boolean existsByEmail(String email);

@@ -1,7 +1,11 @@
 package br.org.miauaumigos.backend.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.util.HashSet;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -36,4 +40,7 @@ public class Endereco {
     @Column(nullable = false, length = 10)
     private String cep;
 
+    @OneToMany(mappedBy = "endereco")
+    @JsonIgnore
+    private Set<Adotante> adotantes = new HashSet<>();
 }

@@ -3,7 +3,9 @@ package br.org.miauaumigos.backend.model.entity;
 import br.org.miauaumigos.backend.model.enums.EspecieAnimal;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
@@ -36,6 +38,10 @@ public class Animal {
 
     @Column(nullable = true)
     private String urlFoto;
+
+    @CreationTimestamp // O Hibernate preenche automaticamente ao salvar
+    @Column(name = "data_criacao", updatable = false)
+    private LocalDateTime dataCriacao;
 
     @OneToMany(mappedBy = "animal", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<EventoAnimal> eventos;

@@ -39,6 +39,30 @@ public class AnimalService {
         return toResponseDTO(animal);
     }
 
+    @Transactional
+    public AnimalResponseDTO atualizar(Long id, AnimalRequestDTO dto) {
+        Animal animal = animalRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Animal não encontrado com o ID: " + id));
+
+        animal.setNome(dto.getNome());
+        animal.setEspecieAnimal(dto.getEspecieAnimal());
+        animal.setSexo(dto.getSexo());
+        animal.setPelagem(dto.getPelagem());
+        animal.setBio(dto.getBio());
+        animal.setUrlFoto(dto.getUrlFoto());
+
+        Animal animalAtualizado = animalRepository.save(animal);
+        return toResponseDTO(animalAtualizado);
+    }
+
+    @Transactional
+    public void deletar(Long id) {
+        if (!animalRepository.existsById(id)) {
+            throw new EntityNotFoundException("Animal não encontrado com o ID: " + id);
+        }
+        animalRepository.deleteById(id);
+    }
+
     // --- Métodos Auxiliares de Conversão (Mappers) ---
 
     private Animal toEntity(AnimalRequestDTO dto) {

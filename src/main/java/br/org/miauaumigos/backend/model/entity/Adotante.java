@@ -2,6 +2,9 @@ package br.org.miauaumigos.backend.model.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -36,4 +39,8 @@ public class Adotante {
     
     @Column(nullable = true, length = 2000)
     private String fotoUrl;
+
+    @CreationTimestamp
+    @Column(name = "data_criacao", updatable = false)
+    private LocalDateTime dataCriacao;
 }

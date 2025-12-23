@@ -3,6 +3,7 @@ package br.org.miauaumigos.backend.controller;
 import br.org.miauaumigos.backend.dto.AnimalRequestDTO;
 import br.org.miauaumigos.backend.dto.AnimalResponseDTO;
 import br.org.miauaumigos.backend.model.enums.EspecieAnimal;
+import br.org.miauaumigos.backend.security.config.SecurityConfig;
 import br.org.miauaumigos.backend.security.jwt.JwtService;
 import br.org.miauaumigos.backend.service.AnimalService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -11,6 +12,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.test.context.support.WithMockUser;
@@ -26,6 +28,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(AnimalController.class)
+@Import(SecurityConfig.class) // Garante que a configuração de segurança (CSRF disabled) seja carregada
 class AnimalControllerTest {
 
     @Autowired

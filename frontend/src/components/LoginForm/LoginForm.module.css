@@ -1,0 +1,11 @@
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px; /* Adiciona um espaço entre os elementos do formulário */
+  padding: 2rem;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+  max-width: 400px; /* Define uma largura máxima para o formulário */
+  margin: 2rem auto; /* Centraliza o formulário na tela */
+}

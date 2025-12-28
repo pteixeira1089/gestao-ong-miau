@@ -9,3 +9,12 @@
   max-width: 400px; /* Define uma largura máxima para o formulário */
   margin: 2rem auto; /* Centraliza o formulário na tela */
 }
+
+.error {
+  color: #d32f2f;
+  background-color: #ffebee;
+  padding: 0.5rem;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  text-align: center;
+}

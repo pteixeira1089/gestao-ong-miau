@@ -33,4 +33,16 @@ public class AdotanteController {
     public ResponseEntity<AdotanteResponseDTO> buscarPorId(@PathVariable Long id) {
         return ResponseEntity.ok(adotanteService.buscarPorId(id));
     }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<AdotanteResponseDTO> atualizar(@PathVariable Long id, @RequestBody @Valid AdotanteRequestDTO dto) {
+        AdotanteResponseDTO adotanteAtualizado = adotanteService.atualizar(id, dto);
+        return ResponseEntity.ok(adotanteAtualizado);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deletar(@PathVariable Long id) {
+        adotanteService.deletar(id);
+        return ResponseEntity.noContent().build();
+    }
 }

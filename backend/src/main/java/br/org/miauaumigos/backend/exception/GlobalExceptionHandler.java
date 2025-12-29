@@ -33,23 +33,29 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
     }
 
-    // Trata erro de validação (Campos obrigatórios, @NotBlank, etc) -> Retorna 400
+    // Trata erro de validação (Campos obrigatórios, @NotBlank, @PastOrPresent, etc) -> Retorna 400
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<Map<String, String>> handleValidationExceptions(MethodArgumentNotValidException ex) {
+    public ResponseEntity<Map<String, Object>> handleValidationExceptions(MethodArgumentNotValidException ex) {
+        Map<String, Object> response = new HashMap<>();
         Map<String, String> errors = new HashMap<>();
+        
         ex.getBindingResult().getAllErrors().forEach((error) -> {
             String fieldName = ((FieldError) error).getField();
             String errorMessage = error.getDefaultMessage();
             errors.put(fieldName, errorMessage);
         });
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
+        
+        response.put("message", "Erro de validação nos campos");
+        response.put("errors", errors);
+        
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
     }
     
-    // Trata erro de regra de negócio genérica (IllegalArgumentException) -> Retorna 400
-    @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<Map<String, String>> handleIllegalArgument(IllegalArgumentException ex) {
+    // Trata erro de regra de negócio genérica (IllegalArgumentException, IllegalStateException) -> Retorna 400
+    @ExceptionHandler({IllegalArgumentException.class, IllegalStateException.class})
+    public ResponseEntity<Map<String, String>> handleBusinessException(RuntimeException ex) {
         Map<String, String> error = new HashMap<>();
-        error.put("error", "Erro de validação");
+        error.put("error", "Erro de Regra de Negócio");
         error.put("message", ex.getMessage());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
     }

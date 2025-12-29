@@ -16,7 +16,9 @@ const Home = () => {
         <Button onClick={() => navigate('/animais')}>
           Gerenciar Animais
         </Button>
-        {/* Futuramente: Gerenciar Adotantes, Adoções, etc */}
+        <Button onClick={() => navigate('/adotantes')}>
+          Gerenciar Adotantes
+        </Button>
       </div>
     </div>
   );

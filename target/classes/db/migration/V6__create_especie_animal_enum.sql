@@ -1,1 +1,0 @@
-CREATE TYPE especie_animal AS ENUM ('GATO', 'CACHORRO', 'OUTRO')

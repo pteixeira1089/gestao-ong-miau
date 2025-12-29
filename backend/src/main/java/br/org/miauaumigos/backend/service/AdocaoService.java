@@ -4,6 +4,7 @@ import br.org.miauaumigos.backend.dto.*;
 import br.org.miauaumigos.backend.model.entity.Adocao;
 import br.org.miauaumigos.backend.model.entity.Adotante;
 import br.org.miauaumigos.backend.model.entity.Animal;
+import br.org.miauaumigos.backend.model.entity.EventoAnimal;
 import br.org.miauaumigos.backend.repository.AdocaoRepository;
 import br.org.miauaumigos.backend.repository.AdotanteRepository;
 import br.org.miauaumigos.backend.repository.AnimalRepository;
@@ -12,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -28,10 +30,13 @@ public class AdocaoService {
         Animal animal = animalRepository.findById(dto.getAnimalId())
                 .orElseThrow(() -> new EntityNotFoundException("Animal não encontrado com ID: " + dto.getAnimalId()));
 
+        // Validação: Verificar se o animal JÁ está adotado
+        if (isAnimalAdotado(animal)) {
+            throw new IllegalStateException("Este animal já está adotado! Registre uma devolução antes de nova adoção.");
+        }
+
         Adotante adotante = adotanteRepository.findById(dto.getAdotanteId())
                 .orElseThrow(() -> new EntityNotFoundException("Adotante não encontrado com ID: " + dto.getAdotanteId()));
-
-        // Aqui poderíamos adicionar validações extras, ex: se o animal já está adotado.
 
         Adocao adocao = new Adocao();
         adocao.setAnimal(animal);
@@ -58,7 +63,19 @@ public class AdocaoService {
         return toResponseDTO(adocao);
     }
 
-    // --- Mappers Auxiliares ---
+    // --- Métodos Auxiliares ---
+
+    private boolean isAnimalAdotado(Animal animal) {
+        if (animal.getEventos() == null || animal.getEventos().isEmpty()) {
+            return false;
+        }
+        EventoAnimal ultimoEvento = animal.getEventos().stream()
+                .max(Comparator.comparing(EventoAnimal::getDataEvento)
+                        .thenComparing(EventoAnimal::getId))
+                .orElse(null);
+        
+        return ultimoEvento instanceof Adocao;
+    }
 
     private AdocaoResponseDTO toResponseDTO(Adocao entity) {
         return AdocaoResponseDTO.builder()
@@ -70,7 +87,6 @@ public class AdocaoService {
                 .build();
     }
 
-    // Duplicando mappers simples para evitar acoplamento circular com outros Services
     private AnimalResponseDTO toAnimalDTO(Animal animal) {
         return AnimalResponseDTO.builder()
                 .id(animal.getId())
@@ -81,6 +97,7 @@ public class AdocaoService {
                 .bio(animal.getBio())
                 .urlFoto(animal.getUrlFoto())
                 .dataCriacao(animal.getDataCriacao())
+                .adotado(isAnimalAdotado(animal))
                 .build();
     }
 

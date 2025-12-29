@@ -2,13 +2,16 @@ package br.org.miauaumigos.backend.service;
 
 import br.org.miauaumigos.backend.dto.AnimalRequestDTO;
 import br.org.miauaumigos.backend.dto.AnimalResponseDTO;
+import br.org.miauaumigos.backend.model.entity.Adocao;
 import br.org.miauaumigos.backend.model.entity.Animal;
+import br.org.miauaumigos.backend.model.entity.EventoAnimal;
 import br.org.miauaumigos.backend.repository.AnimalRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -77,6 +80,21 @@ public class AnimalService {
     }
 
     private AnimalResponseDTO toResponseDTO(Animal animal) {
+        // Lógica para determinar se está adotado:
+        // Verifica se o último evento registrado é uma Adoção.
+        // Se houver uma devolução posterior, o último evento não será Adoção.
+        boolean isAdotado = false;
+        if (animal.getEventos() != null && !animal.getEventos().isEmpty()) {
+            EventoAnimal ultimoEvento = animal.getEventos().stream()
+                    .max(Comparator.comparing(EventoAnimal::getDataEvento)
+                            .thenComparing(EventoAnimal::getId)) // Desempate por ID caso datas sejam iguais
+                    .orElse(null);
+            
+            if (ultimoEvento instanceof Adocao) {
+                isAdotado = true;
+            }
+        }
+
         return AnimalResponseDTO.builder()
                 .id(animal.getId())
                 .nome(animal.getNome())
@@ -86,6 +104,7 @@ public class AnimalService {
                 .bio(animal.getBio())
                 .urlFoto(animal.getUrlFoto())
                 .dataCriacao(animal.getDataCriacao())
+                .adotado(isAdotado)
                 .build();
     }
 }

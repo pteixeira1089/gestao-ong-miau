@@ -2,7 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { listarAnimais, cadastrarAnimal, atualizarAnimal, deletarAnimal } from '../../services/animalService';
 import Card from '../../components/shared/Card/Card';
 import Button from '../../components/shared/Button/Button';
+import Modal from '../../components/shared/Modal/Modal';
 import AnimalForm from './components/AnimalForm/AnimalForm';
+import AdocaoForm from './components/AdocaoForm/AdocaoForm';
 import styles from './Animais.module.css';
 
 const Animais = () => {
@@ -10,8 +12,11 @@ const Animais = () => {
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
   const [editingAnimal, setEditingAnimal] = useState(null);
+  
+  // Estado para o Modal de Adoção
+  const [adocaoModalOpen, setAdocaoModalOpen] = useState(false);
+  const [animalParaAdocao, setAnimalParaAdocao] = useState(null);
 
-  // Carrega os animais ao abrir a página
   useEffect(() => {
     fetchAnimais();
   }, []);
@@ -43,7 +48,7 @@ const Animais = () => {
     if (window.confirm('Tem certeza que deseja excluir este animal?')) {
       try {
         await deletarAnimal(id);
-        fetchAnimais(); // Recarrega a lista
+        fetchAnimais();
       } catch (error) {
         console.error('Erro ao deletar:', error);
         alert('Erro ao excluir animal.');
@@ -59,7 +64,7 @@ const Animais = () => {
         await cadastrarAnimal(formData);
       }
       setShowForm(false);
-      fetchAnimais(); // Recarrega a lista
+      fetchAnimais();
     } catch (error) {
       console.error('Erro ao salvar:', error);
       alert('Erro ao salvar animal. Verifique os dados.');
@@ -71,9 +76,20 @@ const Animais = () => {
     setEditingAnimal(null);
   };
 
+  // --- Lógica de Adoção ---
+  const handleAbrirAdocao = (animal) => {
+    setAnimalParaAdocao(animal);
+    setAdocaoModalOpen(true);
+  };
+
+  const handleAdocaoSucesso = () => {
+    setAdocaoModalOpen(false);
+    setAnimalParaAdocao(null);
+    fetchAnimais(); // Recarrega para atualizar o status de adotado
+  };
+
   if (loading) return <div className={styles.loading}>Carregando...</div>;
 
-  // Se estiver no modo formulário, mostra o form
   if (showForm) {
     return (
       <div className={styles.container}>
@@ -86,7 +102,6 @@ const Animais = () => {
     );
   }
 
-  // Modo listagem
   return (
     <div className={styles.container}>
       <div className={styles.header}>
@@ -107,10 +122,25 @@ const Animais = () => {
               subtitle={`${animal.especieAnimal} - ${animal.sexo === 'M' ? 'Macho' : 'Fêmea'}`}
               image={animal.urlFoto || 'https://via.placeholder.com/300?text=Sem+Foto'}
               actions={
-                <>
+                <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap', justifyContent: 'flex-end' }}>
+                  {animal.adotado ? (
+                    <div style={{ 
+                      padding: '0.5rem 1rem', 
+                      backgroundColor: '#e0f7fa', 
+                      color: '#006064', 
+                      borderRadius: '4px',
+                      fontWeight: 'bold',
+                      border: '1px solid #b2ebf2'
+                    }}>
+                      Já Adotado 🏠❤️
+                    </div>
+                  ) : (
+                    <Button onClick={() => handleAbrirAdocao(animal)} style={{ backgroundColor: '#28a745' }}>Adotar 🏠</Button>
+                  )}
+                  
                   <Button onClick={() => handleEditarAnimal(animal)}>Editar</Button>
                   <Button onClick={() => handleDeletarAnimal(animal.id)} style={{ backgroundColor: '#dc3545' }}>Excluir</Button>
-                </>
+                </div>
               }
             >
               <p><strong>Pelagem:</strong> {animal.pelagem}</p>
@@ -119,6 +149,21 @@ const Animais = () => {
           ))}
         </div>
       )}
+
+      {/* Modal de Adoção */}
+      <Modal 
+        isOpen={adocaoModalOpen} 
+        onClose={() => setAdocaoModalOpen(false)}
+        title="Registrar Adoção"
+      >
+        {animalParaAdocao && (
+          <AdocaoForm 
+            animal={animalParaAdocao} 
+            onSuccess={handleAdocaoSucesso} 
+            onCancel={() => setAdocaoModalOpen(false)} 
+          />
+        )}
+      </Modal>
     </div>
   );
 };

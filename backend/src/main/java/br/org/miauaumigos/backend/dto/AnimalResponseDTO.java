@@ -21,4 +21,5 @@ public class AnimalResponseDTO {
     private String bio;
     private String urlFoto;
     private LocalDateTime dataCriacao;
+    private boolean adotado; // Novo campo
 }

@@ -45,6 +45,45 @@ public class AdotanteService {
         return toResponseDTO(adotante);
     }
 
+    @Transactional
+    public AdotanteResponseDTO atualizar(Long id, AdotanteRequestDTO dto) {
+        Adotante adotante = adotanteRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Adotante não encontrado com o ID: " + id));
+
+        // Atualiza campos simples
+        adotante.setNome(dto.getNome());
+        adotante.setTelefone(dto.getTelefone());
+        adotante.setEmail(dto.getEmail());
+        adotante.setDocumentoIdentificacao(dto.getDocumentoIdentificacao());
+        adotante.setObservacoes(dto.getObservacoes());
+        adotante.setFotoUrl(dto.getFotoUrl());
+
+        // Atualiza Endereço (se existir)
+        if (dto.getEndereco() != null) {
+            if (adotante.getEndereco() == null) {
+                adotante.setEndereco(new Endereco());
+            }
+            adotante.getEndereco().setLogradouro(dto.getEndereco().getLogradouro());
+            adotante.getEndereco().setNumero(dto.getEndereco().getNumero());
+            adotante.getEndereco().setComplemento(dto.getEndereco().getComplemento());
+            adotante.getEndereco().setBairro(dto.getEndereco().getBairro());
+            adotante.getEndereco().setCidade(dto.getEndereco().getCidade());
+            adotante.getEndereco().setEstado(dto.getEndereco().getEstado());
+            adotante.getEndereco().setCep(dto.getEndereco().getCep());
+        }
+
+        Adotante adotanteAtualizado = adotanteRepository.save(adotante);
+        return toResponseDTO(adotanteAtualizado);
+    }
+
+    @Transactional
+    public void deletar(Long id) {
+        if (!adotanteRepository.existsById(id)) {
+            throw new EntityNotFoundException("Adotante não encontrado com o ID: " + id);
+        }
+        adotanteRepository.deleteById(id);
+    }
+
     // --- Mappers ---
 
     private Adotante toEntity(AdotanteRequestDTO dto) {

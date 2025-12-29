@@ -4,6 +4,8 @@ import br.org.miauaumigos.backend.model.enums.EspecieAnimal;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.JdbcType;
+import org.hibernate.dialect.PostgreSQLEnumJdbcType;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -25,6 +27,7 @@ public class Animal {
 
     @Enumerated(EnumType.STRING)
     @Column(columnDefinition = "especie_animal", nullable = false)
+    @JdbcType(PostgreSQLEnumJdbcType.class)
     private EspecieAnimal especieAnimal;
 
     @Column(nullable = false, length = 1)

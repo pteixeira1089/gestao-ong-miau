@@ -2,10 +2,10 @@ package br.org.miauaumigos.backend.model.enums;
 
 public enum TipoEventoAnimal {
     ACOLHIMENTO,
-    INTERNAÇÃO,
+    INTERNACAO,
     ALTA,
-    ADOÇÃO,
-    DEVOLUÇÃO,
+    ADOCAO,
+    DEVOLUCAO,
     FALECIMENTO,
     OUTRO
 }

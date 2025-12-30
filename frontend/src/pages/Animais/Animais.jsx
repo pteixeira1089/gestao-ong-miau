@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { listarAnimais, cadastrarAnimal, atualizarAnimal, deletarAnimal } from '../../services/animalService';
 import Card from '../../components/shared/Card/Card';
 import Button from '../../components/shared/Button/Button';
@@ -8,14 +9,15 @@ import AdocaoForm from './components/AdocaoForm/AdocaoForm';
 import styles from './Animais.module.css';
 
 const Animais = () => {
+  const navigate = useNavigate();
   const [animais, setAnimais] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
   const [editingAnimal, setEditingAnimal] = useState(null);
   
-  // Estado para o Modal de Adoção
+  // Estado para Modal de Adoção Rápida (opcional, já que temos a timeline)
   const [adocaoModalOpen, setAdocaoModalOpen] = useState(false);
-  const [animalParaAdocao, setAnimalParaAdocao] = useState(null);
+  const [animalSelecionado, setAnimalSelecionado] = useState(null);
 
   useEffect(() => {
     fetchAnimais();
@@ -76,16 +78,20 @@ const Animais = () => {
     setEditingAnimal(null);
   };
 
-  // --- Lógica de Adoção ---
+  // --- Ações ---
+  const irParaTimeline = (id) => {
+    navigate(`/animais/${id}/timeline`);
+  };
+
   const handleAbrirAdocao = (animal) => {
-    setAnimalParaAdocao(animal);
+    setAnimalSelecionado(animal);
     setAdocaoModalOpen(true);
   };
 
   const handleAdocaoSucesso = () => {
     setAdocaoModalOpen(false);
-    setAnimalParaAdocao(null);
-    fetchAnimais(); // Recarrega para atualizar o status de adotado
+    setAnimalSelecionado(null);
+    fetchAnimais(); 
   };
 
   if (loading) return <div className={styles.loading}>Carregando...</div>;
@@ -123,6 +129,8 @@ const Animais = () => {
               image={animal.urlFoto || 'https://via.placeholder.com/300?text=Sem+Foto'}
               actions={
                 <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap', justifyContent: 'flex-end' }}>
+                  <Button onClick={() => irParaTimeline(animal.id)} style={{ backgroundColor: '#17a2b8' }}>Histórico 📅</Button>
+                  
                   {animal.adotado ? (
                     <div style={{ 
                       padding: '0.5rem 1rem', 
@@ -130,9 +138,12 @@ const Animais = () => {
                       color: '#006064', 
                       borderRadius: '4px',
                       fontWeight: 'bold',
-                      border: '1px solid #b2ebf2'
+                      border: '1px solid #b2ebf2',
+                      display: 'flex',
+                      alignItems: 'center',
+                      fontSize: '0.9rem'
                     }}>
-                      Já Adotado 🏠❤️
+                      Adotado 🏠
                     </div>
                   ) : (
                     <Button onClick={() => handleAbrirAdocao(animal)} style={{ backgroundColor: '#28a745' }}>Adotar 🏠</Button>
@@ -150,15 +161,15 @@ const Animais = () => {
         </div>
       )}
 
-      {/* Modal de Adoção */}
+      {/* Mantive o Modal de Adoção Rápida aqui também, pois é prático */}
       <Modal 
         isOpen={adocaoModalOpen} 
         onClose={() => setAdocaoModalOpen(false)}
         title="Registrar Adoção"
       >
-        {animalParaAdocao && (
+        {animalSelecionado && (
           <AdocaoForm 
-            animal={animalParaAdocao} 
+            animal={animalSelecionado} 
             onSuccess={handleAdocaoSucesso} 
             onCancel={() => setAdocaoModalOpen(false)} 
           />

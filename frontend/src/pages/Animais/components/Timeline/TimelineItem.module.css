@@ -1,0 +1,79 @@
+.item {
+  display: flex;
+  gap: 1rem;
+  padding-bottom: 2rem;
+  position: relative;
+}
+
+/* Linha vertical conectando os itens */
+.item::before {
+  content: '';
+  position: absolute;
+  left: 20px;
+  top: 40px;
+  bottom: 0;
+  width: 2px;
+  background-color: #e0e0e0;
+}
+
+.item:last-child::before {
+  display: none;
+}
+
+.icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: #007bff;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  z-index: 1;
+  flex-shrink: 0;
+}
+
+.content {
+  background-color: white;
+  padding: 1rem;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  flex: 1;
+  border: 1px solid #eee;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.title {
+  margin: 0;
+  font-size: 1.1rem;
+  color: #333;
+}
+
+.date {
+  font-size: 0.9rem;
+  color: #777;
+}
+
+.body {
+  color: #555;
+}
+
+.actions {
+  margin-top: 1rem;
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+}
+
+/* Cores por tipo */
+.ADOCAO { background-color: #28a745; }
+.DEVOLUCAO { background-color: #dc3545; }
+.VACINA { background-color: #17a2b8; }
+.ACOLHIMENTO { background-color: #ffc107; color: #333; }

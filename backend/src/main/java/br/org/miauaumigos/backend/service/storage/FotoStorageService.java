@@ -1,4 +1,4 @@
-package br.org.miauaumigos.backend.service;
+package br.org.miauaumigos.backend.service.storage;
 
 import org.springframework.web.multipart.MultipartFile;
 

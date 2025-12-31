@@ -37,6 +37,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         // Libera o login e qualquer outra rota pública
                         .requestMatchers("/api/auth/**").permitAll()
+                        .requestMatchers("/fotos/**").permitAll() // Libera acesso público às fotos
                         .requestMatchers("/error").permitAll() // Libera rota de erro padrão do Spring
                         .anyRequest().authenticated()
                 )

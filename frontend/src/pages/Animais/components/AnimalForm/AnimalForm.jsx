@@ -2,13 +2,13 @@ import React, { useState, useEffect } from 'react';
 import Input from '../../../../components/shared/Input/Input';
 import Select from '../../../../components/shared/Select/Select';
 import Button from '../../../../components/shared/Button/Button';
+import ImageUpload from '../../../../components/shared/ImageUpload/ImageUpload';
 import { INITIAL_ANIMAL_STATE, ESPECIE_OPTIONS, SEXO_OPTIONS } from '../../../../constants/animalModel';
 import styles from './AnimalForm.module.css';
 
 const AnimalForm = ({ initialData, onSubmit, onCancel }) => {
   const [formData, setFormData] = useState(INITIAL_ANIMAL_STATE);
 
-  // Se receber dados iniciais (edição), preenche o formulário
   useEffect(() => {
     if (initialData) {
       setFormData(initialData);
@@ -33,6 +33,13 @@ const AnimalForm = ({ initialData, onSubmit, onCancel }) => {
     <form className={styles.form} onSubmit={handleSubmit}>
       <h2>{initialData ? 'Editar Animal' : 'Novo Animal'}</h2>
       
+      {/* Componente de Upload no topo */}
+      <ImageUpload 
+        value={formData.urlFoto} 
+        onChange={(url) => handleChange('urlFoto', url)} 
+        placeholder="🐾"
+      />
+
       <Input
         placeholder="Nome do Animal"
         value={formData.nome}
@@ -60,12 +67,8 @@ const AnimalForm = ({ initialData, onSubmit, onCancel }) => {
         onChange={(e) => handleChange('pelagem', e.target.value)}
       />
 
-      <Input
-        placeholder="URL da Foto (opcional)"
-        value={formData.urlFoto}
-        onChange={(e) => handleChange('urlFoto', e.target.value)}
-      />
-
+      {/* Removi o Input de URL manual, pois agora temos o Upload */}
+      
       <Input
         placeholder="Bio / Descrição"
         value={formData.bio}

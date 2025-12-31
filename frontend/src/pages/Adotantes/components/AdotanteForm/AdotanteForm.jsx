@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Input from '../../../../components/shared/Input/Input';
 import Button from '../../../../components/shared/Button/Button';
+import ImageUpload from '../../../../components/shared/ImageUpload/ImageUpload';
 import { INITIAL_ADOTANTE_STATE } from '../../../../constants/adotanteModel';
 import styles from './AdotanteForm.module.css';
 
@@ -41,6 +42,13 @@ const AdotanteForm = ({ initialData, onSubmit, onCancel }) => {
     <form className={styles.form} onSubmit={handleSubmit}>
       <h2>{initialData ? 'Editar Adotante' : 'Novo Adotante'}</h2>
       
+      {/* Upload de Foto no topo */}
+      <ImageUpload 
+        value={formData.fotoUrl} 
+        onChange={(url) => handleChange('fotoUrl', url)} 
+        placeholder="👤"
+      />
+
       <h3 className={styles.sectionTitle}>Dados Pessoais</h3>
       <Input
         placeholder="Nome Completo"
@@ -120,11 +128,6 @@ const AdotanteForm = ({ initialData, onSubmit, onCancel }) => {
       </div>
 
       <h3 className={styles.sectionTitle}>Outros</h3>
-      <Input
-        placeholder="URL da Foto (opcional)"
-        value={formData.fotoUrl}
-        onChange={(e) => handleChange('fotoUrl', e.target.value)}
-      />
       
       <Input
         placeholder="Observações"

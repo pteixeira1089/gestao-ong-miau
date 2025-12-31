@@ -11,3 +11,6 @@ Thumbs.db
 *.log
 
 node_modules
+
+#Ignora a pasta upload, que contém samples de imagens
+/backend/uploads
